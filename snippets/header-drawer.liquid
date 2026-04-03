@@ -1,0 +1,408 @@
+<header-drawer class="rp-mobile-drawer" data-breakpoint="tablet">
+  <details id="Details-menu-drawer-container" class="menu-drawer-container">
+    <summary
+      class="header__icon header__icon--menu header__icon--summary link focus-inset rp-drawer-toggle"
+      aria-label="Menú"
+    >
+      <span class="rp-toggle-icon rp-toggle-icon--hamburger" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </span>
+
+      <span class="rp-toggle-icon rp-toggle-icon--close" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <line x1="5" y1="5" x2="19" y2="19"></line>
+          <line x1="19" y1="5" x2="5" y2="19"></line>
+        </svg>
+      </span>
+    </summary>
+
+    <div id="menu-drawer" class="menu-drawer gradient color-{{ section.settings.menu_color_scheme }}">
+      <div class="menu-drawer__inner-container">
+        <nav class="rp-drawer-nav" role="navigation" aria-label="Menú móvil">
+
+          <div class="rp-drawer-search">
+            {% render 'header-search', input_id: 'Search-In-Drawer' %}
+          </div>
+
+          <ul class="rp-drawer-menu list-unstyled" role="list">
+            <li class="rp-drawer-menu__item">
+              <a href="{{ routes.root_url }}" class="rp-drawer-menu__link">Inicio</a>
+            </li>
+            <li class="rp-drawer-menu__item">
+              <a href="{{ routes.all_products_collection_url }}" class="rp-drawer-menu__link">Catálogo</a>
+            </li>
+            <li class="rp-drawer-menu__item">
+              <a href="/collections/promociones" class="rp-drawer-menu__link">Promociones</a>
+            </li>
+            <li class="rp-drawer-menu__item">
+              <a href="/pages/sobre-nosotros" class="rp-drawer-menu__link">Sobre nosotros</a>
+            </li>
+             
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </details>
+</header-drawer>
+
+<style>
+  .rp-mobile-drawer,
+  .rp-mobile-drawer .menu-drawer-container,
+  .rp-mobile-drawer details {
+    display: block !important;
+    position: static !important;
+  }
+
+  .rp-mobile-drawer .menu-drawer-container {
+    margin: 0;
+    padding: 0;
+  }
+
+  body.overflow-hidden-tablet {
+    overflow: hidden !important;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  html:has(body.overflow-hidden-tablet) {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+
+   
+  .rp-mobile-drawer summary::before,
+  .rp-mobile-drawer details > summary::before,
+  .rp-mobile-drawer details[open] > summary::before,
+  .rp-mobile-drawer details[open]:not(.menu-opening) > summary::before {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    background: transparent !important;
+  }
+
+  .rp-mobile-drawer .rp-drawer-toggle {
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 999px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition:
+      background 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .rp-mobile-drawer .rp-drawer-toggle:hover,
+  .rp-mobile-drawer .rp-drawer-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .rp-toggle-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px !important;
+    height: 22px !important;
+    transform: translate(-50%, -50%);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .rp-toggle-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+    display: block !important;
+  }
+
+  .rp-toggle-icon svg line {
+    stroke: #ffffff !important;
+    stroke-width: 2.4 !important;
+    stroke-linecap: round !important;
+  }
+
+  .rp-mobile-drawer details:not([open]) .rp-toggle-icon--hamburger {
+    display: flex !important;
+  }
+
+  .rp-mobile-drawer details:not([open]) .rp-toggle-icon--close {
+    display: none !important;
+  }
+
+  .rp-mobile-drawer details[open] .rp-toggle-icon--hamburger {
+    display: none !important;
+  }
+
+  .rp-mobile-drawer details[open] .rp-toggle-icon--close {
+    display: flex !important;
+  }
+
+  .rp-mobile-drawer details[open] > .rp-drawer-toggle {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    z-index: 60 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #menu-drawer.menu-drawer {
+    position: fixed !important;
+    top: 68px !important;
+    left: 0 !important;
+    width: min(88vw, 380px);
+    max-width: 380px;
+    height: calc(100vh - 68px) !important;
+    margin: 0 !important;
+    background: #050505 !important;
+    color: #ffffff;
+    border-right: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 16px 0 40px rgba(0,0,0,0.38);
+    z-index: 9990 !important;
+    overflow-y: auto;
+  }
+
+  .rp-drawer-nav {
+    padding: 2rem 1.8rem 2.4rem;
+  }
+
+  .rp-drawer-search {
+    margin-bottom: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #0b0b0b;
+    padding-bottom: 0.2rem;
+  }
+
+  .rp-drawer-search .header__search,
+  .rp-drawer-search .search,
+  .rp-drawer-search .field,
+  .rp-drawer-search predictive-search,
+  .rp-drawer-search search-form {
+    width: 100%;
+    display: block;
+    position: relative;
+  }
+
+  .rp-drawer-search .field {
+    position: relative;
+  }
+
+  .rp-drawer-search .field__input {
+    width: 100% !important;
+    min-height: 4.9rem !important;
+    height: 4.9rem !important;
+    padding: 0 5rem 0 1.5rem !important;
+    border-radius: 1.4rem !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 1.45rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .rp-drawer-search .field__input::placeholder {
+    color: rgba(0, 0, 0, 0.5) !important;
+    opacity: 1 !important;
+  }
+
+  .rp-drawer-search .field__label {
+    display: none !important;
+  }
+
+  .rp-drawer-search .reset__button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .rp-drawer-search .search__button {
+    position: absolute !important;
+    top: 0.2rem !important;
+    right: 0.2rem !important;
+    height: calc(100% - 0.4rem) !important;
+    width: 4rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #111111 !important;
+    z-index: 3 !important;
+  }
+
+  .rp-drawer-search .search__button svg,
+  .rp-drawer-search .search__button .icon {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+  }
+
+  .rp-drawer-search .predictive-search {
+    position: absolute !important;
+    top: calc(100% + 0.5rem) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    border-radius: 1.2rem !important;
+    overflow: hidden !important;
+    z-index: 20 !important;
+  }
+
+  .rp-drawer-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rp-drawer-menu__item + .rp-drawer-menu__item {
+    margin-top: 0.8rem;
+  }
+
+  .rp-drawer-nav {
+    padding: 1.8rem 1.4rem 2.2rem;
+  }
+
+  .rp-drawer-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rp-drawer-menu__item + .rp-drawer-menu__item {
+    margin-top: 1rem;
+  }
+
+  .rp-drawer-menu__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 5.2rem;
+    padding: 0 1.5rem;
+    border-radius: 1.4rem;
+    text-decoration: none !important;
+    color: #ffffff !important;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    font-family: "Playfair Display", serif;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.82);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+
+  .rp-drawer-menu__link:hover,
+  .rp-drawer-menu__link:focus,
+  .rp-drawer-menu__link:active {
+    background: #ffffff;
+    color: #000000 !important;
+    border-color: #ffffff;
+    transform: translateX(3px);
+    outline: none;
+  }
+
+  .menu-drawer__inner-container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: 990px) {
+    .rp-mobile-drawer {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    const details = document.getElementById('Details-menu-drawer-container');
+    const drawerPanel = document.getElementById('menu-drawer');
+    const drawerSummary = details ? details.querySelector('summary') : null;
+
+    if (!details || !drawerPanel || !drawerSummary) return;
+
+    let scrollTop = 0;
+
+   
+    function lockBody() {
+      scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollTop}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+
+      document.body.classList.add('overflow-hidden-tablet');
+    }
+
+     
+    function unlockBody() {
+      const savedTop = document.body.style.top;
+
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+
+      document.body.classList.remove('overflow-hidden-tablet');
+
+      window.scrollTo(0, Math.abs(parseInt(savedTop || '0', 10)));
+    }
+
+  
+    function closeDrawer() {
+      details.removeAttribute('open');
+      details.classList.remove('menu-opening');
+      unlockBody();
+    }
+
+     
+    details.addEventListener('toggle', function () {
+      if (details.open) {
+        lockBody();
+      } else {
+        unlockBody();
+      }
+    });
+
+    
+    document.addEventListener('click', function (event) {
+      if (!details.hasAttribute('open')) return;
+
+      const clickedInsideDrawer = drawerPanel.contains(event.target);
+      const clickedToggle = drawerSummary.contains(event.target);
+
+      if (!clickedInsideDrawer && !clickedToggle) {
+        closeDrawer();
+      }
+    });
+
+  
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && details.hasAttribute('open')) {
+        closeDrawer();
+      }
+    });
+  })();
+</script>

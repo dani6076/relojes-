@@ -1,0 +1,521 @@
+<link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<style>
+  .section-header {
+    margin-bottom: 0 !important;
+  }
+
+  .header-wrapper {
+    background: #000000 !important;
+    border-bottom: none !important;
+  }
+
+  .header-wrapper .page-width {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .rp-header {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: #000000;
+  }
+
+  .rp-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    flex: 0 0 auto;
+  }
+
+  .rp-header__logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    line-height: 0;
+  }
+
+  .rp-header__logo-wrap img,
+  .rp-header__logo-wrap .header__heading-logo {
+    display: block;
+    width: clamp(72px, 8vw, 120px);
+    height: auto !important;
+    max-height: 60px;
+    object-fit: contain;
+  }
+
+  .rp-header__title {
+    color: #ffffff;
+    font-family: "Playfair Display", serif;
+    font-size: 3.4rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .rp-header__navbox {
+    flex: 1;
+    background: #ffffff;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    border-radius: 6px;
+    overflow: visible;
+    margin: 0 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 20;
+  }
+
+  .rp-header__navinner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .rp-header__menu {
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .rp-header__menu ul {
+    display: flex;
+    gap: 14px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .rp-header__menu a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 12px;
+    text-decoration: none;
+    color: #111111;
+    font-size: 1.3rem;
+    font-family: "Playfair Display", serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+  }
+
+  .rp-header__menu a::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 6px;
+    height: 1px;
+    background: #111111;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
+
+  .rp-header__menu a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .rp-header__search {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 0;
+    position: relative;
+  }
+
+  .rp-header__search .header__search {
+    width: 100%;
+    max-width: 320px;
+    position: relative;
+    display: block;
+  }
+
+  .rp-header__search predictive-search {
+    width: 100%;
+    position: relative;
+    display: block;
+  }
+
+  .rp-header__search .search {
+    position: relative;
+  }
+
+  .rp-header__search .field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .rp-header__search .field::after,
+  .rp-header__search .field::before {
+    display: none !important;
+  }
+
+  .rp-header__search .field__input {
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+    background: #f7f7f7;
+    padding: 0 78px 0 14px;
+    font-size: 1.3rem;
+    font-family: "Playfair Display", serif;
+    color: #111111;
+    box-sizing: border-box;
+    box-shadow: none;
+  }
+
+  .rp-header__search .field__input:focus,
+  .rp-header__search .field__input:focus-visible {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    outline: none;
+  }
+
+  .rp-header__search .field__input::placeholder {
+    color: rgba(17, 17, 17, 0.55);
+    opacity: 1;
+  }
+
+  .rp-header__search .field__label {
+    display: none;
+  }
+
+  .rp-header__search .field__button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #111111;
+    padding: 0;
+    margin: 0;
+    min-width: auto;
+    min-height: auto;
+    width: 18px;
+    height: 18px;
+    z-index: 3;
+    box-shadow: none;
+  }
+
+  .rp-header__search .field__button::before,
+  .rp-header__search .field__button::after {
+    display: none !important;
+  }
+
+  .rp-header__search .reset__button {
+    right: 38px;
+  }
+
+  .rp-header__search .search__button {
+    right: 14px;
+  }
+
+  .rp-header__search .field__button svg,
+  .rp-header__search .field__button .icon,
+  .rp-header__search .field__button .svg-wrapper {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  .rp-header__search .predictive-search {
+    top: calc(100% + 6px);
+    right: 0;
+    left: auto;
+    width: 42rem;
+    min-width: 42rem;
+    max-width: 42rem;
+    z-index: 80;
+    max-height: 70vh;
+    border-radius: 1.4rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .rp-header__search .predictive-search__results-groups-wrapper {
+    display: block;
+    padding-bottom: 0;
+  }
+
+  .rp-header__search .predictive-search__result-group,
+  .rp-header__search .predictive-search__result-group:first-child {
+    display: block;
+    flex: initial;
+    width: 100%;
+  }
+
+  .rp-header__search .predictive-search__result-group:first-child .predictive-search__pages-wrapper {
+    display: none;
+  }
+
+  .rp-header__search .predictive-search__heading {
+    margin: 0 1.6rem;
+    padding: 1.2rem 0 0.8rem;
+  }
+
+  .rp-header__search .predictive-search__results-list {
+    margin: 0;
+    padding: 0 0 0.8rem;
+  }
+
+  .rp-header__search .predictive-search__list-item {
+    width: 100%;
+  }
+
+  .rp-header__search .predictive-search__item {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem 1.6rem;
+  }
+
+  .rp-header__search .predictive-search__item--link-with-thumbnail {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    column-gap: 1.2rem;
+    align-items: center;
+  }
+
+  .rp-header__search .predictive-search__item-content {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rp-header__search .predictive-search__item-content--centered {
+    justify-content: center;
+  }
+
+  .rp-header__search .predictive-search__item-heading {
+    margin: 0;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-height: 1.35;
+    font-size: 1.35rem;
+  }
+
+  .rp-header__search .predictive-search__image {
+    width: 100%;
+    max-width: 6rem;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .rp-header__search .predictive-search .price {
+    margin-top: 0.4rem;
+    font-size: 1.2rem;
+  }
+
+  .rp-header__search .predictive-search__item-query-result {
+    white-space: normal;
+    word-break: normal;
+  }
+
+  .rp-mobile-header {
+    display: none;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .rp-header__search .predictive-search {
+      width: 36rem;
+      min-width: 36rem;
+      max-width: 36rem;
+    }
+
+    .rp-header__title {
+      font-size: 2.8rem;
+    }
+
+    .rp-header__logo-wrap img,
+    .rp-header__logo-wrap .header__heading-logo {
+      width: clamp(64px, 7vw, 90px);
+      height: auto !important;
+      max-height: 52px;
+    }
+
+    .rp-header__menu ul {
+      gap: 8px;
+    }
+
+    .rp-header__menu a {
+      font-size: 1.18rem;
+      padding: 0 10px;
+    }
+
+    .rp-header__navinner {
+      grid-template-columns: 1fr 280px;
+      gap: 12px;
+    }
+
+    .rp-header__navbox {
+      margin: 0 16px;
+    }
+
+    .rp-header__search .header__search {
+      max-width: 280px;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .rp-header {
+      display: none;
+    }
+
+    .rp-mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #000000;
+      gap: 10px;
+    }
+
+    .rp-mobile-header .rp-header__brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .rp-mobile-header .rp-header__logo-wrap img,
+    .rp-mobile-header .rp-header__logo-wrap .header__heading-logo {
+      width: clamp(80px, 22vw, 120px);
+      height: auto !important;
+      max-height: 44px;
+      object-fit: contain;
+    }
+
+    .rp-mobile-header__center,
+    .rp-mobile-header__title,
+    .rp-mobile-header__right {
+      display: none !important;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .rp-mobile-header {
+      padding: 8px 12px;
+    }
+
+    .rp-mobile-header .rp-header__logo-wrap img,
+    .rp-mobile-header .rp-header__logo-wrap .header__heading-logo {
+      width: clamp(80px, 22vw, 120px);
+      max-height: 38px;
+    }
+  }
+</style>
+
+<div class="header-wrapper">
+  <header class="page-width">
+
+    <div class="rp-header">
+      <a href="{{ routes.root_url }}" class="rp-header__brand">
+        {% if settings.logo != blank %}
+          <span class="rp-header__logo-wrap">
+            {% assign logo_alt = settings.logo.alt | default: shop.name | escape %}
+            {% assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio %}
+            {{
+              settings.logo
+              | image_url: width: 300
+              | image_tag:
+                class: 'header__heading-logo motion-reduce',
+                widths: '120, 180, 240, 300',
+                width: settings.logo_width,
+                height: logo_height,
+                alt: logo_alt,
+                preload: true
+            }}
+          </span>
+        {% endif %}
+         
+      </a>
+
+      <div class="rp-header__navbox">
+        <div class="rp-header__navinner">
+          <div class="rp-header__menu">
+            <ul>
+              <li><a href="{{ routes.root_url }}">Inicio</a></li>
+              <li><a href="/collections/all">Catálogo</a></li>
+              <li><a href="/collections/promociones">Promociones</a></li>
+              <li><a href="/pages/sobre-nosotros">Sobre nosotros</a></li>
+            </ul>
+          </div>
+
+          <div class="rp-header__search">
+            {% render 'header-search', input_id: 'Search-In-Header' %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-mobile-header">
+      <div>
+        {% render 'header-drawer' %}
+      </div>
+
+      <a href="{{ routes.root_url }}" class="rp-header__brand">
+        {% if settings.logo != blank %}
+          <span class="rp-header__logo-wrap">
+            {% assign logo_alt = settings.logo.alt | default: shop.name | escape %}
+            {% assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio %}
+            {{
+              settings.logo
+              | image_url: width: 300
+              | image_tag:
+                class: 'header__heading-logo motion-reduce',
+                widths: '120, 180, 240, 300',
+                width: settings.logo_width,
+                height: logo_height,
+                alt: logo_alt,
+                preload: true
+            }}
+          </span>
+        {% endif %}
+         
+      </a>
+
+       
+    </div>
+
+  </header>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    },
+    {
+      "type": "color_scheme",
+      "id": "menu_color_scheme",
+      "label": "Menu color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

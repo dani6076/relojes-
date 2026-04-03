@@ -1,0 +1,49 @@
+<section class="hero-custom">
+  <div class="hero-custom__container page-width">
+
+    <div class="hero-custom__content">
+      <h1 class="hero-custom__title">
+        Elegancia en cada segundo
+      </h1>
+
+      <p class="hero-custom__subtitle">
+        Encuentra el reloj perfecto para tu estilo
+      </p>
+
+      <div class="hero-custom__buttons">
+        <a href="{{ routes.all_products_collection_url }}" class="hero-btn hero-btn--dark">
+          CATÁLOGO
+        </a>
+
+        <a 
+          href="https://wa.me/{{ settings.phone | remove: '+' | remove: ' ' }}" 
+          class="hero-btn hero-btn--light"
+          target="_blank"
+        >
+          CONTACTANOS
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-custom__image">
+  <img
+    src="{{ 'icon-reloj.svg' | asset_url }}"
+    alt="Reloj"
+    width="1000"
+    height="1000"
+  >
+</div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero banner custom",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Hero banner custom"
+    }
+  ]
+}
+{% endschema %}

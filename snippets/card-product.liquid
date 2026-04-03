@@ -1,0 +1,102 @@
+{% comment %}
+  CARD PRODUCT MODIFICADO PARA PROMOCIONES
+  Soporta:
+  1) Precio normal de Shopify:
+     - price = precio actual
+     - compare_at_price = precio anterior
+  2) Metafield manual de descuento:
+     - custom.discount_percentage
+{% endcomment %}
+
+{%- unless skip_styles -%}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{%- if card_product and card_product != empty -%}
+  {%- assign discount_percentage = 0 -%}
+
+  {%- if card_product.metafields.custom.discount_percentage != blank -%}
+    {%- assign discount_percentage = card_product.metafields.custom.discount_percentage.value | default: card_product.metafields.custom.discount_percentage | plus: 0 -%}
+  {%- endif -%}
+
+  {%- assign has_compare_price = false -%}
+  {%- if card_product.compare_at_price > card_product.price -%}
+    {%- assign has_compare_price = true -%}
+  {%- endif -%}
+
+  {%- assign has_manual_discount = false -%}
+  {%- if discount_percentage > 0 -%}
+    {%- assign has_manual_discount = true -%}
+  {%- endif -%}
+
+  {%- assign show_promo = false -%}
+  {%- if has_compare_price or has_manual_discount -%}
+    {%- assign show_promo = true -%}
+  {%- endif -%}
+
+  {%- assign old_price = blank -%}
+  {%- assign current_price = card_product.price -%}
+
+  {%- if has_compare_price -%}
+    {%- assign old_price = card_product.compare_at_price -%}
+  {%- elsif has_manual_discount and discount_percentage < 100 -%}
+    {%- assign multiplier = 100 | minus: discount_percentage -%}
+    {%- assign old_price = current_price | times: 100.0 | divided_by: multiplier -%}
+  {%- endif -%}
+
+  {%- assign badge_text = blank -%}
+  {%- if has_manual_discount -%}
+    {%- assign badge_text = '-' | append: discount_percentage | append: '%' -%}
+  {%- elsif has_compare_price and card_product.compare_at_price > 0 -%}
+    {%- assign auto_discount = card_product.compare_at_price | minus: card_product.price | times: 100.0 | divided_by: card_product.compare_at_price | round -%}
+    {%- assign badge_text = '-' | append: auto_discount | append: '%' -%}
+  {%- endif -%}
+
+  <div class="rp-card">
+    <a href="{{ card_product.url }}" class="rp-card__media">
+      {% if card_product.featured_media %}
+        <img
+          src="{{ card_product.featured_media | image_url: width: 600 }}"
+          alt="{{ card_product.featured_media.alt | default: card_product.title | escape }}"
+          loading="lazy"
+          width="{{ card_product.featured_media.width }}"
+          height="{{ card_product.featured_media.height }}"
+        >
+      {% endif %}
+
+      {%- if show_promo -%}
+        <span class="rp-card__badge">
+          {%- if badge_text != blank -%}
+            {{ badge_text }}
+          {%- else -%}
+            OFERTA
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </a>
+
+    <div class="rp-card__info">
+      <h3 class="rp-card__title">
+        <a href="{{ card_product.url }}">
+          {{ card_product.title | escape }}
+        </a>
+      </h3>
+
+      <div class="rp-card__price">
+        {% if show_promo and old_price != blank %}
+          <span class="rp-price-old">
+            {{ old_price | money }}
+          </span>
+
+          <span class="rp-price-new">
+            {{ current_price | money }}
+          </span>
+        {% else %}
+          <span class="rp-price-normal">
+            {{ current_price | money }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

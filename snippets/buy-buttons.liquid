@@ -1,0 +1,175 @@
+{% comment %}
+  Renders product buy-buttons.
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} product form id.
+  - section_id: {String} id of section to which this snippet belongs.
+  - show_pickup_availability: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+
+  Usage:
+  {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
+{% endcomment %}
+
+<div {{ block.shopify_attributes }}>
+  {%- if product != blank -%}
+    {%- form 'product',
+      product,
+      id: product_form_id,
+      class: 'form',
+      novalidate: 'novalidate',
+      data-type: 'add-to-cart-form'
+    -%}
+      <input
+        type="hidden"
+        name="id"
+        value="{{ product.selected_or_first_available_variant.id }}"
+        {% if product.selected_or_first_available_variant.available == false %}
+          disabled
+        {% endif %}
+        class="product-variant-id"
+      >
+
+      <div class="product-form__buttons">
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        {%- assign whatsapp_number = settings.phone | remove: '+' | remove: ' ' | remove: '-' -%}
+
+        <div
+          class="product-whatsapp-box"
+          data-product-title="{{ product.title | escape }}"
+          data-product-vendor="{{ product.vendor | escape }}"
+          data-product-url="{{ shop.url }}{{ product.url }}"
+          data-whatsapp-number="{{ whatsapp_number }}"
+          data-section-id="{{ section_id }}"
+        >
+          <script type="application/json" class="product-whatsapp-variants">
+            {{ product.variants | json }}
+          </script>
+
+          <div class="product-whatsapp-total">
+            Total:
+            <span class="product-whatsapp-total-value">
+              {{ current_variant.price | money_with_currency }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="button button--full-width button--primary product-whatsapp-button"
+          >
+            Contactar por WhatsApp
+          </button>
+        </div>
+      </div>
+    {%- endform -%}
+
+    <script>
+      (function() {
+        const root = document.querySelector('[data-section="{{ section_id }}"], [id*="{{ section_id }}"]') || document;
+        const box = root.querySelector('.product-whatsapp-box');
+        if (!box) return;
+
+        const quantityInput =
+          root.querySelector('.quantity__input') ||
+          document.querySelector('.quantity__input');
+
+        const variantIdInput =
+          root.querySelector('input[name="id"]') ||
+          document.querySelector('input[name="id"]');
+
+        const totalValue = box.querySelector('.product-whatsapp-total-value');
+        const whatsappButton = box.querySelector('.product-whatsapp-button');
+        const variantsJson = box.querySelector('.product-whatsapp-variants');
+
+        if (!variantsJson || !variantIdInput || !whatsappButton || !totalValue) {
+          console.log('WhatsApp script detenido: falta variantsJson, variantIdInput, button o totalValue');
+          return;
+        }
+
+        let variants = [];
+        try {
+          variants = JSON.parse(variantsJson.textContent);
+        } catch (e) {
+          console.warn('No se pudo leer variants JSON', e);
+          return;
+        }
+
+        function getCurrentVariant() {
+          const currentVariantId = Number(variantIdInput.value);
+          return variants.find((variant) => variant.id === currentVariantId) || variants[0];
+        }
+
+        function getQuantity() {
+          const qty = quantityInput ? parseInt(quantityInput.value || '1', 10) : 1;
+          return qty > 0 ? qty : 1;
+        }
+
+        function formatMoney(cents) {
+          return new Intl.NumberFormat('es-BO', {
+            style: 'currency',
+            currency: '{{ cart.currency.iso_code }}',
+            minimumFractionDigits: 2
+          }).format((cents || 0) / 100);
+        }
+
+        function getSelectedOptionsText(variant) {
+          if (!variant || !variant.options) return '';
+          return variant.options.join(' / ');
+        }
+
+        function updateTotal() {
+          const variant = getCurrentVariant();
+          const quantity = getQuantity();
+          const total = (variant.price || 0) * quantity;
+          totalValue.textContent = formatMoney(total);
+        }
+
+        function buildMessage() {
+          const variant = getCurrentVariant();
+          const quantity = getQuantity();
+          const unitPrice = variant.price || 0;
+          const total = unitPrice * quantity;
+          const selectedOptions = getSelectedOptionsText(variant);
+
+          let message = `Hola! Me interesa el siguiente reloj:\n\n`;
+          message += `*${box.dataset.productTitle}*\n`;
+          message += `Marca: ${box.dataset.productVendor}\n`;
+
+          if (selectedOptions && variant.title !== 'Default Title') {
+            message += `Variante: ${selectedOptions}\n`;
+          }
+
+          message += `Cantidad: ${quantity} unidad(es)\n`;
+          message += `Precio unitario: ${formatMoney(unitPrice)}\n\n`;
+          message += `*Total a pagar: ${formatMoney(total)}*\n\n`;
+          message += `Link del producto: ${box.dataset.productUrl}\n\n`;
+          message += `¿Podrían darme más información?`;
+
+          return message;
+        }
+
+        function goToWhatsApp() {
+          const phone = box.dataset.whatsappNumber;
+          const message = encodeURIComponent(buildMessage());
+          const url = `https://wa.me/${phone}?text=${message}`;
+          window.open(url, '_blank');
+        }
+
+        updateTotal();
+
+        if (quantityInput) {
+          quantityInput.addEventListener('input', updateTotal);
+          quantityInput.addEventListener('change', updateTotal);
+        }
+
+        document.addEventListener('change', function(event) {
+          if (event.target) {
+            setTimeout(updateTotal, 150);
+          }
+        });
+
+        whatsappButton.addEventListener('click', goToWhatsApp);
+      })();
+    </script>
+  {%- endif -%}
+</div>
